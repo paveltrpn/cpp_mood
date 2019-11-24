@@ -42,7 +42,11 @@ disasm:
 
 chainline:
 	$(info CHAINLINE file compile)
-	$(CC) $(CFLAGS) chainline.cpp -o main -lstdc++ -lplplotcxx 
+	$(CC) $(CFLAGS) chainline.cpp -o main -lstdc++ -lplplotcxx
+
+movesemantic:
+	$(info MOVESEMANTIC file compile)
+	$(CC) $(CFLAGS) movesemantic.cpp -o main -lstdc++  
 
 clean:
 	$(RM) *.o

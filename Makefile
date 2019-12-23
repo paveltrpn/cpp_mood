@@ -1,6 +1,6 @@
 
 CC     :=  g++
-CFLAGS := -Wall -std=c++11 
+CFLAGS := -Wall -std=c++17 
 LIBS   := 
 RM     := rm -f
 
@@ -47,6 +47,10 @@ chainline:
 movesemantic:
 	$(info MOVESEMANTIC file compile)
 	$(CC) $(CFLAGS) movesemantic.cpp -o main -lstdc++  
+
+ip_test:
+	$(info IP_TEST file compile)
+	$(CC) $(CFLAGS) ip_test.cpp -o main -lstdc++ 
 
 clean:
 	$(RM) *.o

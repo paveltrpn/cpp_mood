@@ -26,6 +26,17 @@ void usage() {
     cout << "usage: main -ip <addr>\n";
 }
 
-int main(int argc, char **argb) {
+int main(int argc, char **argv) {
+
+    if (argc != 3) {
+        usage();
+        exit(0);
+    }
+
+    if (string(argv[1]) != "-ip") {
+        usage();
+        exit(0);
+    }
+
     return 0;
 }

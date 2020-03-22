@@ -6,13 +6,16 @@
 #OBJS	:= $(SRCS:.cpp=.o)
 
 #Windows specific
-HOME		= D:\Engineering
-RM_O		= powershell "(Remove-Item -ErrorAction Ignore *.o)"
-RM_MAIN		= powershell "(Remove-Item -ErrorAction Ignore main.exe)"
-RM_CHEM_O	= powershell "(Remove-Item -ErrorAction Ignore chem/*.o)"
+CYGWIN		= D:/Devtools/cygwin/bin
+HOME		= D:/Engineering
+ALGEBRA_CPP = $(HOME)/algebra_cpp
+
+RM_O		= rm -f *.o
+RM_MAIN		= rm -f main.exe
+RM_CHEM_O	= rm -f chem/*.o
 
 CC = g++
-CFLAGS = -std=c++17
+CFLAGS = -Wall -std=c++17
 
 CHEM_OBJS	=  chem/test.o\
 			   chem/polynomial.o\
@@ -29,35 +32,14 @@ $(info COMMON MAKEFILE)
 dummy:
 	$(info no make target)
 
-#CHEM target
-chem: $(CHEM_OBJS)
-	$(CC) $(CHEM_OBJS) -o main -lstdc++
+chem: 
+	cd $(ALGEBRA_CPP) ; make compile
+	cd $(HOME)/cpp_trivia/chem ; make compile
+	$(CC) $(CHEM_OBJS) -o chem -lstdc++
 
-mtrx234.o: mtrx234.cpp
-	 $(CFLAGS) -I $(HOME)/algebra_cpp/ -c $(HOME)/algebra_cpp/mtrx234.cpp 
-
-vec234.o: vec234.cpp
-	 $(CFLAGS) -I $(HOME)/algebra_cpp/ -c $(HOME)/algebra_cpp/vec234.cpp
-
-qtnn.o: qtnn.cpp
-	 $(CFLAGS) -I $(HOME)/algebra_cpp/ -c $(HOME)/algebra_cpp/qtnn.cpp
-
-plane.o: plane.cpp
-	 $(CFLAGS) -I $(HOME)/algebra_cpp/ -c $(HOME)/algebra_cpp/plane.cpp	
-
-chem/polynomial.o: chem/polynomial.cpp
-	$(CC) $(CFLAGS) -I $(HOME)/algebra_cpp/ -c chem/polynomial.cpp -o chem/polynomial.o
-
-chem/simple.o: chem/simple.cpp
-	$(CC) $(CFLAGS) -I $(HOME)/algebra_cpp/ -c chem/simple.cpp -o chem/simple.o
-
-chem/test.o: chem/test.cpp
-	$(CC) $(CFLAGS) -I $(HOME)/algebra_cpp/ -c chem/test.cpp -o chem/test.o
-
-#Other targets
 template:
-	$(info TEMPLATE file compile)
-	$(CC) $(CFLAGS) template.cpp -o main -lstdc++
+	cd $(HOME)/cpp_trivia/template ; make compile
+	$(CC) template.o -o template -lstdc++
 
 vector:
 	$(info VECTOR file compile)
@@ -96,6 +78,7 @@ ip_test:
 	$(CC) $(CFLAGS) ip_test.cpp -o main -lstdc++ 
 
 clean:
-	$(RM_O)
-	$(RM_CHEM_O)
-	$(RM_MAIN) 
+	rm -f *.o
+	rm -f main.exe
+	rm -f chem/*.o
+	rm -f $(ALGEBRA_CPP)/*.o

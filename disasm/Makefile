@@ -6,5 +6,5 @@ OBJS := $(SRCS:.cpp=.o)
 
 compile: disasm.o
 
-derivative.o: disasm.cpp
+disasm.o: disasm.cpp
 	$(CC) $(CFLAGS) -c disasm.cpp 

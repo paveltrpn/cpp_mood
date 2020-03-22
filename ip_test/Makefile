@@ -6,5 +6,5 @@ OBJS := $(SRCS:.cpp=.o)
 
 compile: ip_test.o
 
-derivative.o: ip_test.cpp
+ip_test.o: ip_test.cpp
 	$(CC) $(CFLAGS) -c ip_test.cpp 

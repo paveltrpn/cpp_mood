@@ -6,5 +6,5 @@ OBJS := $(SRCS:.cpp=.o)
 
 compile: prime.o
 
-derivative.o: prime.cpp
+prime.o: prime.cpp
 	$(CC) $(CFLAGS) -c prime.cpp 

@@ -6,5 +6,5 @@ OBJS := $(SRCS:.cpp=.o)
 
 compile: transpose.o
 
-derivative.o: transpose.cpp
+transpose.o: transpose.cpp
 	$(CC) $(CFLAGS) -c transpose.cpp 

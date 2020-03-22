@@ -1,84 +1,80 @@
 
 #Linux specific
-#HOME	:= 
-#RM		:= rm -f *.o
-#SRCS	:= $(wildcard *.cpp)
-#OBJS	:= $(SRCS:.cpp=.o)
+#DEVHOME	= 
+#SRCS		= $(wildcard *.cpp)
+#OBJS		= $(SRCS:.cpp=.o)
 
 #Windows specific
 CYGWIN		= D:/Devtools/cygwin/bin
-HOME		= D:/Engineering
-ALGEBRA_CPP = $(HOME)/algebra_cpp
+DEVHOME		= D:/Engineering
+ALGEBRA_CPP = $(DEVHOME)/algebra_cpp
 
-RM_O		= rm -f *.o
-RM_MAIN		= rm -f main.exe
-RM_CHEM_O	= rm -f chem/*.o
-
-CC = g++
-CFLAGS = -Wall -std=c++17
+CC		= g++
+CFLAGS	= -Wall -std=c++17
 
 CHEM_OBJS	=  chem/test.o\
 			   chem/polynomial.o\
 			   chem/simple.o\
-			   $(HOME)/algebra_cpp/mtrx234.o\
-			   $(HOME)/algebra_cpp/vec234.o\
-			   $(HOME)/algebra_cpp/qtnn.o\
-			   $(HOME)/algebra_cpp/plane.o
+			   $(ALGEBRA_CPP)/mtrx234.o\
+			   $(ALGEBRA_CPP)/vec234.o\
+			   $(ALGEBRA_CPP)/qtnn.o\
+			   $(ALGEBRA_CPP)/plane.o
 
-.PHONY: chem
+PRJ_LIST = chem template vector prime vk_quest derivative disasm transpose chainline\
+movesemantic ip_test
+
+.PHONY: $(PRJ_LIST) clean all
 
 $(info COMMON MAKEFILE)
 
-dummy:
-	$(info no make target)
+all: $(PRJ_LIST)
 
 chem: 
 	cd $(ALGEBRA_CPP) ; make compile
-	cd $(HOME)/cpp_trivia/chem ; make compile
+	cd $(DEVHOME)/cpp_trivia/chem ; make compile
 	$(CC) $(CHEM_OBJS) -o chem -lstdc++
 
 template:
-	cd $(HOME)/cpp_trivia/template ; make compile
-	$(CC) template.o -o template -lstdc++
+	cd $(DEVHOME)/cpp_trivia/template ; make compile
+	$(CC) template/template.o -o template -lstdc++
 
 vector:
-	$(info VECTOR file compile)
-	$(CC) $(CFLAGS) vector.cpp -o main -lstdc++
+	cd $(DEVHOME)/cpp_trivia/vector ; make compile
+	$(CC) vector/vector.o -o vector -lstdc++
 
 prime:
-	$(info PRIME file compile)
-	$(CC) $(CFLAGS) prime.cpp -o main -lstdc++
+	cd $(DEVHOME)/cpp_trivia/prime ; make compile
+	$(CC) prime/prime.o -o prime -lstdc++
 
 vk_quest:
-	$(info VK_QUEST file compile)
-	$(CC) $(CFLAGS) vk_quest.cpp -o main -lstdc++ -larmadillo
+	cd $(DEVHOME)/cpp_trivia/vk_quest ; make compile
+	$(CC) vk_quest/vk_quest.o -o vk_quest -lstdc++ -larmadillo
 
 derivative:
-	$(info DERIVATIVE file compile)
-	$(CC) $(CFLAGS) derivative.cpp -o main -lstdc++ -lplplotcxx
+	cd $(DEVHOME)/cpp_trivia/derivative ; make compile
+	$(CC)derivative/derivative.o -o derivative -lstdc++ -lplplotcxx
 	
 transpose:
-	$(info TRANSPOSE file compile)
-	$(CC) $(CFLAGS) transpose.cpp -o main -lstdc++ 
+	cd $(DEVHOME)/cpp_trivia/transpose ; make compile
+	$(CC) transpose/transpose.o -o transpose -lstdc++ 
 
 disasm:
-	$(info DISASM file compile)
-	$(CC) $(CFLAGS) disasm.cpp -o main -lstdc++
+	cd $(DEVHOME)/cpp_trivia/disasm ; make compile
+	$(CC) disasm/disasm.o -o disasm -lstdc++
 
 chainline:
-	$(info CHAINLINE file compile)
-	$(CC) $(CFLAGS) chainline.cpp -o main -lstdc++ -lplplotcxx
+	cd $(DEVHOME)/cpp_trivia/chainline ; make compile
+	$(CC) chainline/chainline.o -o chainline -lstdc++ -lplplotcxx
 
 movesemantic:
-	$(info MOVESEMANTIC file compile)
-	$(CC) $(CFLAGS) movesemantic.cpp -o main -lstdc++  
+	cd $(DEVHOME)/cpp_trivia/movesemantic ; make compile
+	$(CC) movesemantic/movesemantic.o -o movesemantic -lstdc++  
 
 ip_test:
-	$(info IP_TEST file compile)
-	$(CC) $(CFLAGS) ip_test.cpp -o main -lstdc++ 
+	cd $(DEVHOME)/cpp_trivia/ip_test ; make compile
+	$(CC) ip_test/ip_test.o -o ip_test -lstdc++ 
 
 clean:
-	rm -f *.o
-	rm -f main.exe
-	rm -f chem/*.o
+	rm -f *.exe
+	$(foreach prj, $(PRJ_LIST), rm -f $(DEVHOME)/cpp_trivia/$(prj)/*.o;) 
 	rm -f $(ALGEBRA_CPP)/*.o

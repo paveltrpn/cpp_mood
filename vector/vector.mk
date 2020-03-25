@@ -1,6 +1,3 @@
-
-include ../Makefile
-
 SRCS := vector.cpp
 OBJS := $(SRCS:.cpp=.o)
 

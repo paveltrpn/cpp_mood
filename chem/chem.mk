@@ -1,6 +1,3 @@
-
-include ../Makefile
-
 SRCS := test.cpp simple.cpp polynomial.cpp
 OBJS := $(SRCS:.cpp=.o)
 

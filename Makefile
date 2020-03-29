@@ -21,7 +21,7 @@ CHEM_OBJS	=  chem/test.o\
 			   $(ALGEBRA_CPP)/plane.o
 
 PRJ_LIST = chem template vector prime vk_quest derivative disasm transpose chainline\
-movesemantic ip_test
+movesemantic ip_test test_parser
 
 $(info $(CC_VERSION))
 
@@ -72,7 +72,11 @@ movesemantic:
 
 ip_test:
 	cd $(DEVHOME)/cpp_trivia/ip_test ; make compile
-	$(CC) ip_test/ip_test.o -o $@ -lstdc++ 
+	$(CC) ip_test/ip_test.o -o $@ -lstdc++
+
+test_parser:
+	cd $(DEVHOME)/cpp_trivia/test_parser ; make -f test_parser.mk compile
+	$(CC) test_parser/test_parser.o -o $@ -lstdc++ 
 
 clean:
 	rm -f *.exe

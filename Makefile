@@ -5,12 +5,16 @@
 #OBJS		= $(SRCS:.cpp=.o)
 
 #Windows specific
-DEVHOME		= D:/Engineering
-export ALGEBRA_CPP = $(DEVHOME)/algebra_cpp
+DEVHOME				= D:/Engineering
+export DEVTOOLS		= D:/Devtools
+export ALGEBRA_CPP 	= $(DEVHOME)/algebra_cpp
+export BOOSTDIR 	:= $(DEVTOOLS)/boost_1_72_0
+BOOSTLIBDIR 		= D:\Devtools\boost_1_72_0\lib64-msvc-14.2
 
 CC_VERSION = $(shell g++ --version | grep g++)
 export CC		= g++
 export CFLAGS	= -Wall -std=c++17
+
 
 CHEM_OBJS	=  chem/test.o\
 			   chem/polynomial.o\

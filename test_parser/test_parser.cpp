@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
     vector<std::string> out_vector;
     std::ifstream in_file;
     std::ofstream out_file;
-
+    
     /*  
         Это должно было помоч с выводом кириллицы в консоль,
         но не помогло 

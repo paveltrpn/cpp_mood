@@ -3,7 +3,7 @@
     Принимает на вход два параметра - имена входного и выходного файлов.
     Входной файл - исходный код HTML страницы с тестом (там в абсолютно
     безхитростной форме перечислены вопросы и ответы на них в виде простого
-    HTML, без коды javascript). На выходе текстовый файл вида:
+    HTML, без кода javascript). На выходе текстовый файл вида:
         "Строка с вопросом"
         "Строка с ответом"
         ...
@@ -24,9 +24,6 @@
 #include <vector>
 #include <Windows.h>
 #include <clocale>
-
-//#include <boost/program_options.hpp>
-//namespace po = boost::program_options;
 
 using namespace std;
 
@@ -53,7 +50,8 @@ int main(int argc, char **argv) {
     */
     setlocale (LC_ALL, "Rus");
 
-    /* Аргументов должно быть 5 штук */
+    /* Аргументов должно быть 5 штук 
+        См. void usage() */
     if (argc != 5) {
         usage();
         return 1;
@@ -74,7 +72,7 @@ int main(int argc, char **argv) {
         /* Читаем файл построчно */
         for (;getline(in_file,cur_string);) {
             /* Если строка содержит метку строки с вопросом */
-            if (cur_string.find("<div class=\"page-header\">") != -1) {
+            if (cur_string.find("<div class=\"page-header\">") != std::string::npos) {
                 /* Читаем следующую строку */
                 getline(in_file,cur_string);
                 /* Добавляем её в выходной вектор */
@@ -82,7 +80,7 @@ int main(int argc, char **argv) {
             }
 
             /* Если строка содержит метку с троки с ответом */
-            if (cur_string.find("data-type=\"Правильный ответ\"") != -1) {
+            if (cur_string.find("data-type=\"Правильный ответ\"") != std::string::npos) {
                 /* Читаем следующую строку */
                 getline(in_file,cur_string);
                 /* Добавляем её в выходной вектор */
@@ -115,36 +113,3 @@ int main(int argc, char **argv) {
 
     return 0;
 }
-
-/*
-int main(int argc, char **argv) {
-    po::options_description desc("Allowed options");
-    po::variables_map vm;
-    std::string in_fname, out_fname;
-
-    desc.add_options()("help", "produce help message")
-                      ("in", po::value<std::string>(), "input file name")
-                      ("out", po::value<std::string>(), "outpus file name");
-
-    
-    po::store(po::parse_command_line(argc, argv, desc), vm);
-    po::notify(vm);
-
-    if (vm.count("help")) {
-        std::cout << desc << "\n";
-        return 1;
-    }
-
-    if (vm.count("in")) {
-        in_fname = vm["in"].as<std::string>();
-
-        if (in_fname == "") {
-            std::cout << "main(): input file name can't be empty!" << "\n";
-            return 1;
-        }
-    }
-
-    std::cout << in_fname;
-
-    return 0;
-}*/

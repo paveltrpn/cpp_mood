@@ -15,7 +15,6 @@ CC_VERSION = $(shell g++ --version | grep g++)
 export CC		= g++
 export CFLAGS	= -Wall -O2 -std=c++17
 
-
 CHEM_OBJS	=  chem/test.o\
 			   chem/polynomial.o\
 			   chem/simple.o\
@@ -25,7 +24,7 @@ CHEM_OBJS	=  chem/test.o\
 			   $(ALGEBRA_CPP)/plane.o
 
 PRJ_LIST = chem template vector prime vk_quest derivative disasm transpose chainline\
-movesemantic ip_test test_parser test_parser2
+movesemantic ip_test test_parser test_parser2 char_count
 
 $(info $(CC_VERSION))
 
@@ -84,7 +83,11 @@ test_parser:
 
 test_parser2:
 	cd $(DEVHOME)/cpp_trivia/test_parser ; make -f test_parser.mk test_parser2.o
-	$(CC) -s -L$(BOOSTLIBDIR) test_parser/test_parser2.o -o $@ -lstdc++ -lboost_program_options
+	$(CC) -L$(BOOSTLIBDIR) test_parser/test_parser2.o -o $@ -lstdc++ -lboost_program_options
+
+char_count:
+	cd $(DEVHOME)/cpp_trivia/char_count ; make -f char_count.mk char_count.o
+	$(CC) char_count/char_count.o -o $@ -lstdc++ 
 
 clean:
 	rm -f *.exe

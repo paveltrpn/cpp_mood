@@ -1,18 +1,17 @@
 
-#Linux specific
-#DEVHOME	= 
-#SRCS		= $(wildcard *.cpp)
-#OBJS		= $(SRCS:.cpp=.o)
-
-#Windows specific
-DEVHOME				:= D:/Engineering
-export DEVTOOLS		:= D:/Devtools
+###Linux specific###
+DEVHOME				:= ~/code
 export ALGEBRA_CPP 	:= $(DEVHOME)/algebra_cpp
-export BOOSTDIR 	:= $(DEVTOOLS)/boost_1_72_0
-BOOSTLIBDIR 		:= $(DEVHOME)/boost_1_72_0/lib64-msvc-14.2
 
-CC_VERSION = $(shell g++ --version | grep g++)
-export CC		= g++
+###Windows specific###
+#DEVHOME				:= D:/Engineering
+#export DEVTOOLS		:= D:/Devtools
+#export ALGEBRA_CPP 	:= $(DEVHOME)/algebra_cpp
+#export BOOSTDIR 		:= $(DEVTOOLS)/boost_1_72_0
+#BOOSTLIBDIR 			:= $(DEVHOME)/boost_1_72_0/lib64-msvc-14.2
+
+export CC		:= g++-10
+CC_VERSION = $(shell $(CC) --version | grep g++)
 export CFLAGS	= -Wall -O2 -std=c++17
 
 CHEM_OBJS	=  chem/test.o\

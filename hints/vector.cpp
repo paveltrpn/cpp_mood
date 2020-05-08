@@ -10,7 +10,7 @@ void foo(int n) {
 	}
 }
 
-int main(int argc, char * argv[]) {
+int vector_test() {
 	std::cout << "FILE - vector.cpp" << std::endl;
 
 	return 0;

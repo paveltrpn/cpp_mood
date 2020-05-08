@@ -18,6 +18,6 @@ class move_sem_c {
         ~move_sem_c () {};
 };
 
-int main(int argc, char **argv) {
+int movesemantic_test() {
     return 0;
 }

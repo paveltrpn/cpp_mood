@@ -22,8 +22,12 @@ CHEM_OBJS	=  chem/test.o\
 			   $(ALGEBRA_CPP)/qtnn.o\
 			   $(ALGEBRA_CPP)/plane.o
 
-PRJ_LIST = chem template vector prime vk_quest derivative disasm transpose chainline\
-movesemantic ip_test test_parser test_parser2 char_count
+HINTS_OBJS	= hints/movesemantic.o\
+			  hints/vector.o\
+			  hints/test.o
+
+PRJ_LIST = chem template hints prime vk_quest derivative disasm transpose chainline\
+ip_test test_parser test_parser2 char_count
 
 $(info $(CC_VERSION))
 
@@ -40,9 +44,9 @@ template:
 	cd $(DEVHOME)/cpp_trivia/template ; make compile
 	$(CC) template/template.o -o $@ -lstdc++
 
-vector:
-	cd $(DEVHOME)/cpp_trivia/vector ; make -f vector.mk compile
-	$(CC) vector/vector.o -o $@ -lstdc++
+hints:
+	cd $(DEVHOME)/cpp_trivia/hints ; make -f hints.mk compile
+	$(CC) $(HINTS_OBJS) -o $@out -lstdc++
 
 prime:
 	cd $(DEVHOME)/cpp_trivia/prime ; make compile
@@ -68,10 +72,6 @@ chainline:
 	cd $(DEVHOME)/cpp_trivia/chainline ; make compile
 	$(CC) chainline/chainline.o -o $@ -lstdc++ -lplplotcxx
 
-movesemantic:
-	cd $(DEVHOME)/cpp_trivia/movesemantic ; make compile
-	$(CC) movesemantic/movesemantic.o -o $@ -lstdc++  
-
 ip_test:
 	cd $(DEVHOME)/cpp_trivia/ip_test ; make compile
 	$(CC) ip_test/ip_test.o -o $@ -lstdc++
@@ -90,5 +90,6 @@ char_count:
 
 clean:
 	rm -f *.exe
+	rm -f *out
 	$(foreach prj, $(PRJ_LIST), rm -f $(DEVHOME)/cpp_trivia/$(prj)/*.o;) 
 	rm -f $(ALGEBRA_CPP)/*.o

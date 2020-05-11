@@ -10,7 +10,7 @@ export ALGEBRA_CPP 	:= $(DEVHOME)/algebra_cpp
 #export BOOSTDIR 		:= $(DEVTOOLS)/boost_1_72_0
 #BOOSTLIBDIR 			:= $(DEVHOME)/boost_1_72_0/lib64-msvc-14.2
 
-export CC		:= g++-10
+export CC		:= g++-10.1
 CC_VERSION = $(shell $(CC) --version | grep g++)
 export CFLAGS	= -Wall -O2 -std=c++17
 

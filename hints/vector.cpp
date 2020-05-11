@@ -11,7 +11,7 @@ void foo(int n) {
 }
 
 int vector_test() {
-	std::cout << "FILE - vector.cpp" << std::endl;
+	std::cout << "TEST - vector.cpp" << std::endl;
 
 	return 0;
 }

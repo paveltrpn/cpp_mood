@@ -1,10 +1,15 @@
-###Linux specific###
+
+###Windows specific###
+DEVHOME				:= D:/Engineering
+export DEVTOOLS		:= D:/Devtools
+export ALGEBRA_CPP 	:= $(DEVHOME)/algebra_cpp
+export BOOSTDIR 	:= $(DEVTOOLS)/boost_1_72_0
+BOOSTLIBDIR 		:= $(DEVHOME)/boost_1_72_0/lib64-msvc-14.2
+
 export CC		:= g++-10.1
 export CFLAGS	:= -Wall -O2 -std=c++17
-CC_VERSION := $(shell $(CC) --version | grep g++)
 
-DEVHOME				:= $(HOME)/code
-export ALGEBRA_CPP 	:= $(DEVHOME)/algebra_cpp
+CC_VERSION = $(shell $(CC) --version | grep g++)
 
 PRJ_LIST = chem hints prime vk_quest derivative disasm transpose chainline\
 ip_test test_parser test_parser2 char_count
@@ -63,6 +68,6 @@ char_count:
 	$(CC) char_count/char_count.o -o $@ -lstdc++ 
 
 clean:
-	$(foreach prj, $(PRJ_LIST), rm -f $(DEVHOME)/cpp_trivia/$(prj)/*.o;)
-	$(foreach prj, $(PRJ_LIST), rm -f $(DEVHOME)/cpp_trivia/$(prj)/main;)
+	rm -f *.exe
+	$(foreach prj, $(PRJ_LIST), rm -f $(DEVHOME)/cpp_trivia/$(prj)/*.o;) 
 	rm -f $(ALGEBRA_CPP)/*.o

@@ -57,7 +57,7 @@ class first_foo_c {
 
 int movesemantic_test() {
     move_sem_c<int> bar;
-    first_foo_c<float> bar2;
+    first_foo_c<int> bar2;
 
     std::cout << "TEST - movesemantic.cpp" << std::endl;
 

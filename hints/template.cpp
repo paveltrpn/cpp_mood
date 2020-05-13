@@ -6,7 +6,7 @@ template <typename T> T foo(T in) {
 }
 
 int template_test() {
-	std::cout << "FILE - template.cpp" << std::endl;
+	std::cout << "TEST - template.cpp" << "\n" << std::endl;
 	
 	std::cout << "template out = " << foo(10.0) << "\n";
 	

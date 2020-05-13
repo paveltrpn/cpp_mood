@@ -14,6 +14,10 @@
 template<class T, class ... Args>
 constexpr bool is_one_of = (std::is_same_v<T, Args> || ...);
 
+
+
+/* Стандарт C++ говорит следующее [п.14.1.2]:
+       "There is no semantic difference between class and typename in a template-parameter." */
 template <typename T>
 class move_sem_c {
     private:
@@ -59,7 +63,7 @@ int movesemantic_test() {
     move_sem_c<int> bar;
     first_foo_c<int> bar2;
 
-    std::cout << "TEST - movesemantic.cpp" << std::endl;
+    std::cout << "TEST - movesemantic.cpp" << "\n" << std::endl;
 
     return 0;
 }

@@ -10,10 +10,12 @@
 /*  Читаем из бинарного файла n-байт */
 int read_binary_n_bytes(std::string fname, std::size_t size) {
     std::ifstream fp(fname, std::ifstream::binary);
-    std::unique_ptr<char> buffer;
+    /* или так 
+    std::unique_ptr<char[]> buffer(new char[size]); */
+    std::unique_ptr<char[]> buffer = std::make_unique<char[]>(size);
     std::size_t file_size;
     
-    if (!fp) {
+    if (!fp.is_open()) {
         std::cout << "read_binary_n_bytes(): error opening file '" << fname << "." << std::endl;
         return 1;
     }
@@ -42,13 +44,15 @@ int read_file_by_string(std::string fname) {
     std::ifstream fp;
     std::vector<std::string> in_file;
     std::string cur_string;
-
-    if (!fp) {
-        std::cout << "read_file_by_string(): error opening file '" << fname << "." << std::endl;
+    float b{10.0};
+    
+    fp.open(fname);
+    if (!fp.is_open()) {
+        std::cout << "read_file_by_string(): error opening file " << fname << "." << std::endl;
         return 1;
     }
 
-    /* Читаем следующую строку. std::getline cчитывает неформатированные данные из потока в строку. 
+    /* std::getline cчитывает неформатированные данные из потока в строку. 
     Останавливается, как только найден символ, равный разделителю, или исчерпан поток. 
     Первая версия использует в качестве разделителя delim, вторая — '\n'. 
     Символ-разделитель удаляется из потока и не помещается в строку. */
@@ -57,11 +61,37 @@ int read_file_by_string(std::string fname) {
         in_file.push_back(cur_string);
     }
 
+    /* Лябда функция, замыкающая внешнюю переменную in_file по ссылке,
+       принимающая один аргумент n типа int и возвращающая значение
+       типа int. */
+    auto test = [&in_file] (int n) -> int {
+        for (auto &str : in_file) {
+            std::cout << n++ << " " << str << std::endl;
+        }
+
+        return n;
+    } /* круглые скобки в конце - вызов лямбды */ (0);
+
+    /* такая же лямбда как и выше, по другому объявленная, результат тот же */
+    auto test_second {
+        [&in_file] (int n) -> int {
+            for (auto &str : in_file) {
+                std::cout << n++ << " " << str << std::endl;
+            }
+
+            return n;
+        } /* (0) - в этом месте вызовет лямбду */
+    };
+
     fp.close();
 
     return 0;
 }
 
 int file_test() {
-    return 1;
+    std::cout << "TEST - file.cpp" << "\n" << std::endl;
+
+    read_file_by_string("/home/pavel/code/cpp_trivia/hints/hints.h");
+    
+    return 0;
 }

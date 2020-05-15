@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <memory>
 
 /*  Класс с тремя конструкторами -
     по умолчанию, перемещения и копирования и 
@@ -21,7 +22,7 @@ constexpr bool is_one_of = (std::is_same_v<T, Args> || ...);
 template <typename T>
 class move_sem_c {
     private:
-        T *heap;
+        std::unique_ptr<T[]> heap;
         /*  static_assert() проверяет соответствие типа Т списку типов.
             может находится в любом месте кода  В отличие от assert, который выполняется во 
             время выполнения, static_assert выполняется во время компиляции, вызывая ошибку 
@@ -32,8 +33,12 @@ class move_sem_c {
 
     public:
         move_sem_c() {
-
+            heap = nullptr;
         };
+
+        move_sem_c(size_t size) {
+            heap = std::make_unique<T[]>(size*sizeof(T));
+        }
 
         ~move_sem_c () {
             

@@ -75,7 +75,7 @@ class move_sem_c {
 
         ~move_sem_c() {
             allocated = 0;
-            heap.release();
+            heap.reset();
         };
 
         //   Оператор присваивания копированием
@@ -94,12 +94,27 @@ class move_sem_c {
                         allocated*sizeof(T));
 
             // Возвращаем текущий объект, чтобы иметь возможность связать в цепочку выполнение нескольких операций присваивания
-             return *this;
+            return *this;
+        };
+
+        // Оператор перемещения
+        // 
+        move_sem_c& operator=(move_sem_c&& other) {
+            allocated = other.allocated;
+            other.allocated = 0;
+
+            heap = std::move(other.heap);
+
+            // Возвращаем текущий объект, чтобы иметь возможность связать в цепочку выполнение нескольких операций присваивания
+            return *this;
         };
 
         void free() {
             allocated = 0;
-            heap.release();
+            //   у unique_ptr память освобождает именно reset() (см. справочник для использования)
+            //   release() просто освобождает владение ресурсом и unique_ptr становится свободным
+            //   но занятая память не освобождается. 
+            heap.reset();
         };
 
         //   malloc_usable_size(void *foo)  -  obtain  size of block of memory allocated from
@@ -107,7 +122,8 @@ class move_sem_c {
         void show_allocated() {
             std::cout << "move_sem_c(this) - " << this << "\n" <<
                 "allocated - " << allocated << "\n" <<
-                "malloc_usable_size - " << malloc_usable_size(heap.get())/sizeof(T) << " bytes\n" << std::endl;
+                "malloc_usable_size - " << malloc_usable_size(heap.get())/sizeof(T) << " bytes\n" << 
+                "heap place - " << heap.get() << "\n" << std::endl;
         };
 };
 
@@ -131,7 +147,11 @@ class first_foo_c {
 };
 
 move_sem_c<int> returner() {
+    std::cout << "returner() allocated var bar(200)" << std::endl;
+
     move_sem_c<int> bar(200);
+    bar.show_allocated();
+
     return bar;
 };
 
@@ -146,12 +166,23 @@ int movesemantic_test() {
     move_sem_c<int> bar_second(bar); // нельзя, если конструктор копирования приватный 
     bar_second.show_allocated();
 
-    std::cout << "bar_second.free()" << std::endl;
-    bar_second.free();
-    bar_second.show_allocated();
+    std::string word;
+    std::cin >> word; // ждём .....
 
-    std::cout << "Allocated var bar_third by moving from function returner()" << std::endl;
+    std::cout << "allocate bar_huge(1024*100000) " << std::endl;
+    move_sem_c<int> bar_huge(1024*100000);
+    bar_huge.show_allocated();
+
+    std::cin >> word; // ждём .....
+
+    std::cout << "free bar_huge(1024*100000) " << std::endl;
+    bar_huge.free();
+    bar_huge.show_allocated();
+
+    std::cin >> word; // ждём .....
+    
     move_sem_c<int> bar_third = returner();
+    std::cout << "Allocated var bar_third by moving from function returner()" << std::endl;
     bar_third.show_allocated();
 
     std::cout << "Allocated var bar_fourth = bar_third" << std::endl;

@@ -2,21 +2,20 @@
 #include <iostream>
 #include <memory>
 #include <malloc.h>
+#include <cstring>
 
-/*  Класс с тремя конструкторами -
-    по умолчанию, перемещения и копирования и 
-    операторами копирования и перемещения.
-    Заодно здесь памятка про выделение памяти в С++,
-    в С есть malloc() и free(), тут мы имеем
-    new и delete (и delete[]) */
+//   Класс с тремя конструкторами -
+//   по умолчанию, перемещения и копирования и 
+//   операторами копирования и перемещения.
+//   Заодно здесь памятка про выделение памяти в С++,
+//   в С есть malloc() и free(), тут мы имеем
+//   new и delete (и delete[]) */
 
-/*  bool is_one_of - переменная, принимающая результат
-    шаблонного выражения (std::is_same_v<T, Args> || ...), использующего variadic template,
-    в котором проверяется соответствие типа Т списку типов Args. */
+//   bool is_one_of - переменная, принимающая результат
+//   шаблонного выражения (std::is_same_v<T, Args> || ...), использующего variadic template,
+//   в котором проверяется соответствие типа Т списку типов Args. */
 template<class T, class ... Args>
 constexpr bool is_one_of = (std::is_same_v<T, Args> || ...);
-
-
 
 //   Стандарт C++ говорит следующее [п.14.1.2]:
 //   "There is no semantic difference between class and typename in a template-parameter." */
@@ -33,38 +32,82 @@ class move_sem_c {
         //    диагностическое сообщение. Поскольку static_assert не обрабатывается во время выполнения, 
         //    то стейтменты static_assert могут быть размещены в любом месте кода (даже в глобальном пространстве).
         //
-        //    move_sem_c<T> bar - примет только Int и Float
+        //    move_sem_c<T> bar - примет только int и Float
         static_assert(is_one_of<T, int, float>, "static_assert(): move_sem_c: T *heap - bad type!");
 
-        //    приватный конструктор копирования запрещает копирование экземпляров класса
-        move_sem_c(const move_sem_c &other) {
-            //size_t size = other.allocated; 
-        };
-
     public:
-        move_sem_c() {
-            allocated = 0;
-            heap = nullptr;
+        // конструктор по умолчанию
+        move_sem_c(): allocated(0), heap(nullptr) {};
+
+        // основной конструктор
+        move_sem_c(size_t size): allocated(size) {
+            //   Нужно ли делать свой Deleter для unique_ptr,
+            //   содержащий массив чисел типа T?????????????
+            heap = std::make_unique<T[]>(allocated*sizeof(T));
+        }
+
+        //   конструктор копирования.
+        //   если он приватный, то это запрещает копирование экземпляров класса
+        move_sem_c(const move_sem_c &other) {
+            //   на случай попытки копирования неинициализорованного класса
+            if (other.allocated == 0) {
+                allocated = 0;
+                heap = nullptr;
+                return;
+            }
+
+            allocated = other.allocated;
+            heap = std::make_unique<T[]>(allocated*sizeof(T));
+            std::memcpy(reinterpret_cast<char*>(heap.get()), 
+                        reinterpret_cast<char*>(other.heap.get()), 
+                        allocated*sizeof(T));
         };
 
-        move_sem_c(size_t size) {
-            allocated = size*sizeof(T);
-            heap = std::make_unique<T[]>(allocated);
-        }
+        //   конструктор перемещения
+        //   при перемещении старый объект обнуляется
+        //   std::move() перемещает bar в новый unique_ptr
+        move_sem_c(move_sem_c &&other) {
+            allocated = other.allocated;
+            other.allocated = 0;
 
-        move_sem_c(const move_sem_c &&other) {
+            heap = std::move(other.heap);
+        };
 
-        }
-
-        ~move_sem_c () {
+        ~move_sem_c() {
             allocated = 0;
+            heap.release();
+        };
+
+        //   Оператор присваивания копированием
+        //   Порождённый объект будет "таким же, но не им", т.е. иметь теже данные, но в другой области памяти.
+        move_sem_c& operator=(const move_sem_c &other) {
+            if (other.allocated == 0) {
+                allocated = 0;
+                heap = nullptr;
+                return *this;
+            }
+
+            allocated = other.allocated;
+            heap = std::make_unique<T[]>(allocated*sizeof(T));
+            std::memcpy(reinterpret_cast<char*>(heap.get()), 
+                        reinterpret_cast<char*>(other.heap.get()), 
+                        allocated*sizeof(T));
+
+            // Возвращаем текущий объект, чтобы иметь возможность связать в цепочку выполнение нескольких операций присваивания
+             return *this;
+        };
+
+        void free() {
+            allocated = 0;
+            heap.release();
         };
 
         //   malloc_usable_size(void *foo)  -  obtain  size of block of memory allocated from
         //   heap. The main use of this function is for debugging and introspection.
         void show_allocated() {
-            std::cout << "move_sem_c(this) - " << this << ": allocated - " <<
-                malloc_usable_size(heap.get())/sizeof(T) << "\n" << std::endl;
+            std::cout << "move_sem_c(this) - " << this << "\n" <<
+                "allocated - " << allocated << "\n" <<
+                "malloc_usable_size - " << malloc_usable_size(heap.get())/sizeof(T) << " bytes\n" << std::endl;
         };
 };
 
@@ -87,14 +130,34 @@ class first_foo_c {
         };
 };
 
+move_sem_c<int> returner() {
+    move_sem_c<int> bar(200);
+    return bar;
+};
+
 int movesemantic_test() {
     std::cout << "TEST - movesemantic.cpp" << "\n" << std::endl;
 
-    move_sem_c<int> bar(1);
+    std::cout << "Allocated var bar(10)" << std::endl;
+    move_sem_c<int> bar(10);
     bar.show_allocated();
 
-    //move_sem_c<int> bar_second(bar); нельзя, т.к. конструктор копирования приватный 
+    std::cout << "Allocated var bar_second by copy bar" << std::endl;
+    move_sem_c<int> bar_second(bar); // нельзя, если конструктор копирования приватный 
+    bar_second.show_allocated();
 
+    std::cout << "bar_second.free()" << std::endl;
+    bar_second.free();
+    bar_second.show_allocated();
+
+    std::cout << "Allocated var bar_third by moving from function returner()" << std::endl;
+    move_sem_c<int> bar_third = returner();
+    bar_third.show_allocated();
+
+    std::cout << "Allocated var bar_fourth = bar_third" << std::endl;
+    move_sem_c<int> bar_fourth = bar_third;
+    bar_fourth.show_allocated();
+    
     first_foo_c<int> bar2;
 
     return 0;

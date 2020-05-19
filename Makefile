@@ -7,7 +7,7 @@ DEVHOME				:= $(HOME)/code
 export ALGEBRA_CPP 	:= $(DEVHOME)/algebra_cpp
 
 PRJ_LIST = chem hints prime vk_quest derivative disasm transpose chainline\
-ip_test test_parser test_parser2 char_count
+ip_test test_parser test_parser2 char_count kaspersky_quest
 
 $(info $(CC_VERSION))
 
@@ -62,6 +62,9 @@ char_count:
 	cd $(DEVHOME)/cpp_trivia/char_count ; make -f char_count.mk char_count.o
 	$(CC) char_count/char_count.o -o $@ -lstdc++ 
 
+kaspersky_quest:
+	cd $(DEVHOME)/cpp_trivia/kaspersky_quest ; make -f kaspersky_quest.mk
+	
 clean:
 	$(foreach prj, $(PRJ_LIST), rm -f $(DEVHOME)/cpp_trivia/$(prj)/*.o;)
 	$(foreach prj, $(PRJ_LIST), rm -f $(DEVHOME)/cpp_trivia/$(prj)/main;)

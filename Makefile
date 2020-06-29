@@ -1,5 +1,5 @@
 ###Linux specific###
-export CC		:= g++-10.1
+export CC		:= g++
 export CFLAGS	:= -Wall -O2 -std=c++17
 CC_VERSION := $(shell $(CC) --version | grep g++)
 

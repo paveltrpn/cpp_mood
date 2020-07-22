@@ -5,6 +5,8 @@
 #include <cmath>
 #include <array>
 
+#include "canvas.h"
+
 // $ git clone git://github.com/arashpartow/bitmap
 #include "bitmap_image.hpp"
 

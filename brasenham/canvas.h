@@ -5,9 +5,12 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
+#include <cstring>
+#include <utility>
 
 // Класс канвы, содержит в себе холст размером cnvs_width*cnvs_height. Глубина цвета только 32 бит,
-// формат R8G8B8. 
+// формат R8G8B8. Записывает примитивы на холст согласно их состояниям, типа - текущий размер
+// примитива, текущий цвет примитива и т.д. (примитив - в смысле pen, карандаш или что-то вроде того). 
 
 class canvas_c {
     private:
@@ -31,8 +34,9 @@ class canvas_c {
 
             data = new uint8_t[cnvs_width*cnvs_height*bpp]; 
 
-            // цвет холста по умолчанию - чёрный
-            std::fill(data, data + cnvs_width*cnvs_height*bpp, 0);
+            // цвет холста по умолчанию
+            std::fill(data, data + cnvs_width*cnvs_height*bpp, 0x00);
+            //std::memset(data, 128, cnvs_height*cnvs_width*bpp);
         }
 
         ~canvas_c() {
@@ -42,6 +46,9 @@ class canvas_c {
         void set_pen_size(int32_t size);
         void set_pen_color(uint8_t r, uint8_t g, uint8_t b);
         void put_pixel(int32_t x, int32_t y);
+        void brasenham_line(std::pair<int32_t, int32_t> start, std::pair<int32_t, int32_t> end);
+
+        int write_jpeg(std::string fname);
 };
 
 #endif

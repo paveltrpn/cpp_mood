@@ -7,9 +7,6 @@
 
 #include "canvas.h"
 
-// $ git clone git://github.com/arashpartow/bitmap
-#include "bitmap_image.hpp"
-
 using namespace std;
 
 typedef pair<int32_t, int32_t> point_t;
@@ -122,6 +119,23 @@ int main(int argc, char **argv) {
         }
     }
     cout << "\n";
+
+    canvas_c anvas(256, 256);
+
+    anvas.set_pen_color(255, 0, 0);
+    for (size_t j = 0; j < 256; j++) {
+        anvas.put_pixel(128, j);
+        anvas.put_pixel(j, 128);
+    }
+    
+    anvas.set_pen_color(0, 255, 0);
+    anvas.brasenham_line({0,0}, {255, 255});
+    anvas.brasenham_line({200,190}, {130, 190});
+    anvas.brasenham_line({71,190}, {10, 200});
+    anvas.brasenham_line({120,50}, {200, 10});
+    anvas.brasenham_line({0,255}, {255, 0});
+
+    anvas.write_jpeg("out.jpeg");
 
     return 0;
 }

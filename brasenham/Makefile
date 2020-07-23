@@ -16,7 +16,7 @@ all: compile link
 compile: brasenham.o canvas.o
 
 link: 
-	$(CC) $(OBJS) -o main -lstdc++
+	$(CC) $(OBJS) -o main -lstdc++ -ljpeg
 	
 brasenham.o: brasenham.cpp
 	$(CC) $(CFLAGS) -c brasenham.cpp

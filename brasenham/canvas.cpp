@@ -21,6 +21,14 @@ void canvas_c::put_pixel(int32_t x, int32_t y) {
     data[((x*bpp)*cnvs_height + y*bpp) + 2] = pen_color_b;
 }
 
+void canvas_c::put_pixel_depth(int32_t x, int32_t y, float intence) {
+    if ((x < 0) || (y < 0) || (x >= cnvs_width) || (y >= cnvs_width)) return;
+
+    data[((x*bpp)*cnvs_height + y*bpp) + 0] = uint8_t(std::ceil(pen_color_r * intence));
+    data[((x*bpp)*cnvs_height + y*bpp) + 1] = uint8_t(std::ceil(pen_color_g * intence));
+    data[((x*bpp)*cnvs_height + y*bpp) + 2] = uint8_t(std::ceil(pen_color_b * intence));
+}
+
 void canvas_c::brasenham_line(std::pair<int32_t, int32_t> start, std::pair<int32_t, int32_t> end) {
     int32_t dX = abs(end.first - start.first);
     int32_t dY = abs(end.second - start.second);
@@ -60,6 +68,87 @@ void canvas_c::brasenham_line(std::pair<int32_t, int32_t> start, std::pair<int32
     }
 }
 
+int32_t ipart(float a) {
+    float rt;
+
+    std::modf(a, &rt);
+
+    return int32_t(rt);
+}
+
+float fpart(float a) {
+    float tmp;
+    return std::modf(a, &tmp);
+}
+
+void canvas_c::wu_line(std::pair<int32_t, int32_t> start, std::pair<int32_t, int32_t> end) {
+    if (end.first < start.first) {
+        std::swap(start, end);
+    }
+
+    int32_t dx = end.first - start.first;
+    int32_t dy = end.second - start.second;
+    float gradient = dx/dy;
+
+    int32_t xend = std::round(start.first);
+    int32_t yend = start.second + gradient * (xend - start.first);
+    float xgap = 1 - fpart(start.first + 0.5f);
+    int32_t xpxl1 = xend;  // будет использоваться в основном цикле
+    int32_t ypxl1 = ipart(yend);
+    put_pixel_depth(xpxl1, ypxl1, (1 - fpart(yend)) * xgap);
+    put_pixel_depth(xpxl1, ypxl1 + 1, fpart(yend) * xgap);
+    int32_t intery = yend + gradient; // первое y-пересечение для цикла
+
+    xend = std::round(end.first);
+    yend = end.second + gradient * (xend - end.first);
+    xgap = fpart(end.first + 0.5);
+    int32_t xpxl2 = xend;  // будет использоваться в основном цикле
+    int32_t ypxl2 = ipart(yend);
+    put_pixel_depth(xpxl2, ypxl2, (1 - fpart(yend)) * xgap);
+    put_pixel_depth(xpxl2, ypxl2 + 1, fpart(yend) * xgap);
+
+    for (int32_t i = xpxl1 + 1; i < xpxl2 - 1; i++) {
+        put_pixel_depth(i, ipart(intery), 1 - fpart(intery));
+        put_pixel_depth(i, ipart(intery) + 1, fpart(intery));
+        intery = intery + gradient;
+    }
+}
+
+void canvas_c::brasenham_circle(std::pair<int32_t, int32_t> center, int32_t rd) {
+    int32_t x = 0;
+    int32_t y = rd;
+    int32_t delta = 1 -2 * rd;
+    int error = 0;
+
+    while (y >= 0) {
+        put_pixel(center.first + x, center.second + y);
+        put_pixel(center.first + x, center.second - y);
+        put_pixel(center.first - x, center.second + y);
+        put_pixel(center.first - x, center.second - y);
+
+        error =2 * (delta + y) - 1;
+
+        if ((delta < 0) && (error <= 0)) {
+            delta += 2 * ++x + 1;
+            continue;
+        }
+
+        if ((delta > 0) && (error > 0)) {
+            delta -= 2 * --y + 1;
+            continue;
+        }
+
+        delta += 2 * (++x - --y);
+    }
+}
+
+void canvas_c::rect(std::pair<int32_t, int32_t> ul,
+                    std::pair<int32_t, int32_t> ur,
+                    std::pair<int32_t, int32_t> dl,
+                    std::pair<int32_t, int32_t> dr) {
+
+}
+        
 int canvas_c::write_jpeg(std::string fname) {
     /*
     * Sample routine for JPEG compression.  We assume that the target file name

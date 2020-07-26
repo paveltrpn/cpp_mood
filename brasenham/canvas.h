@@ -46,8 +46,16 @@ class canvas_c {
         void set_pen_size(int32_t size);
         void set_pen_color(uint8_t r, uint8_t g, uint8_t b);
         void put_pixel(int32_t x, int32_t y);
-        void brasenham_line(std::pair<int32_t, int32_t> start, std::pair<int32_t, int32_t> end);
+        void put_pixel_depth(int32_t x, int32_t y, float intence);
 
+        void brasenham_line(std::pair<int32_t, int32_t> start, std::pair<int32_t, int32_t> end);
+        void wu_line(std::pair<int32_t, int32_t> start, std::pair<int32_t, int32_t> end);
+        void brasenham_circle(std::pair<int32_t, int32_t> center, int32_t rd);
+        void rect(std::pair<int32_t, int32_t> ul,
+                  std::pair<int32_t, int32_t> ur,
+                  std::pair<int32_t, int32_t> dl,
+                  std::pair<int32_t, int32_t> dr);
+                  
         int write_jpeg(std::string fname);
 };
 

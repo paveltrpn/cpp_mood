@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
                 out_vector.push_back(cur_string);
             }
 
-            /* Если строка содержит метку с троки с ответом */
+            /* Если строка содержит метку строки с ответом */
             if (cur_string.find("data-type=\"Правильный ответ\"") != std::string::npos) {
                 /* Читаем следующую строку */
                 getline(in_file,cur_string);

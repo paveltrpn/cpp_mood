@@ -2,8 +2,8 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include "plplot/plplot.h"
-#include "plplot/plstream.h"
+#include <plplot/plplot.h>
+#include <plplot/plstream.h>
 
 using namespace std;
 

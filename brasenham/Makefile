@@ -1,15 +1,12 @@
 
-CC       := clang++-10
+CC       := g++-10
 CFLAGS   := --std=c++17
 LIBS 	 := 
-RM       := rm -f
 
 SRCS := brasenham.cpp canvas.cpp
 OBJS := $(SRCS:.cpp=.o)
 
 .PHONY: clean all
-
-$(info COMMON MAKEFILE)
 
 all: compile link
 

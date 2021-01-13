@@ -1,10 +1,12 @@
+CC = g++-10
+CFLAGS = --std=c++20
 
 SRCS := vector.cpp movesemantic.cpp file.cpp template.cpp test.cpp
 OBJS := $(SRCS:.cpp=.o)
 
-all: compile build
+.phony: all clean
 
-compile: $(OBJS)
+all: main
 
 vector.o: vector.cpp
 	$(CC) $(CFLAGS) -c vector.cpp
@@ -21,5 +23,8 @@ test.o: test.cpp
 template.o: template.cpp
 	$(CC) $(CFLAGS) -c template.cpp
 
-build:
-	$(CC) $(OBJS) -o main -lstdc++
+main: $(OBJS)
+	$(CC) $(OBJS) -o $@ -lstdc++ -lplplotcxx
+
+clean:
+	rm -f *.o main

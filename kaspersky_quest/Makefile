@@ -2,15 +2,17 @@
 CC = g++-10
 CFLAGS = --std=c++20
 
-SRCS := ip_test.cpp
-OBJS := $(SRCS:.cpp=.o)
+SRCS := test.c
+OBJS := $(SRCS:.c=.o)
 
 .phony: all clean
 
 all: main
 
-ip_test.o: ip_test.cpp
-	$(CC) $(CFLAGS) -c ip_test.cpp
+compile: test.o
+
+test.o: test.c
+	gcc -c test.c 
 
 main: $(OBJS)
 	$(CC) $(OBJS) -o $@ -lstdc++

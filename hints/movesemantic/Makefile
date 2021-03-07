@@ -1,15 +1,21 @@
 
 CC = g++-10
-CFLAGS = --std=c++20 -O0
+CFLAGS = --std=c++20 -O2
 
-SRCS := common.cpp test.cpp
+SRCS := movesemantic.cpp rvalue.cpp test.cpp
 OBJS := $(SRCS:.cpp=.o)
 
 .phony: all clean
 
 all: main
 
-%.o: %.cpp %.h
+movesemantic.o: movesemantic.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
+rvalue.o: rvalue.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
+test.o: test.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 main: $(OBJS)

@@ -5,6 +5,7 @@
 
 #include "common.h"
 
+/*
 int main(int argc, char **argv) {
     fmt::print("{0} {1}", "hello!", "мир\n");
 
@@ -22,5 +23,27 @@ int main(int argc, char **argv) {
 
     // file.printAll();
     
+    return 0;
+}
+*/
+
+int main(int argc, char *argv[]) {
+    std::cout << fmt::format("{0} {1}", "hello!", "мир\n");
+    
+    auto [fileContent, fileSize] = readFileToStrVec("assets/raven.txt");
+
+    // auto word_list = splitStringBySepar(fileContent[0], " ");
+    // 
+    // for (auto& str: word_list) {
+        // std::cout << str << std::endl;
+    // }
+// 
+    // std::cout << joinString(" ", word_list);
+
+    auto single_line = joinString(" ", fileContent);
+    auto single_line_wp = removePunctuation(single_line);
+
+    std::cout << single_line_wp << std::endl;
+
     return 0;
 }

@@ -54,4 +54,6 @@ class oneGb_c {
         };
 };
 
+void refrefTest();
+
 #endif

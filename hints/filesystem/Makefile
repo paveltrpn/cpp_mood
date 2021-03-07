@@ -18,6 +18,9 @@ main.o: main.cpp
 file.o: file.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
+string_mnp.o: string_mnp.cpp common.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
 main: $(OBJS)
 	$(CC) $(OBJS) $(LFLAGS) -o $@ -lstdc++
 

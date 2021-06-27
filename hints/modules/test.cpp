@@ -5,9 +5,9 @@ import algebra;
 import vec3;
 
 int main(int argc, char** argv) {
-    tellAlgebraHello();
+    float foo = floatSum(1.0, 2.0);
 
-    vec3Show(vec3());
-
+    std::cout << foo;
+    
     return 0;
 }

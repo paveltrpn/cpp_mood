@@ -1,12 +1,9 @@
 
-#include <iostream>
-#include <cstdint>
-
 export module vec3;
 
 enum {_XC, _YC, _ZC, _WC};
 
-export class vec3 {
+class vec3 {
     public:
         float data[3];
 
@@ -24,11 +21,11 @@ export class vec3 {
 
         ~vec3() {}
 
-        float operator[](const int32_t id) const {
+        float operator[](const int id) const {
 			return data[id];
 		};
 
-		float &operator[](const int32_t id) {
+		float &operator[](const int id) {
 			return data[id];
 		};
 
@@ -41,11 +38,7 @@ export class vec3 {
 		};
 };
 
-export void vec3Show(vec3 v) {
-    std::cout << "X=" << v[0] << " Y=" << v[1] << " Z=" << v[2] << "\n";
-}
-
-export vec3 vec3Cross(vec3 a, vec3 b) {
+vec3 vec3Cross(vec3 a, vec3 b) {
     vec3 rt;
 
 	rt[0] = a[_YC]*b[_ZC] - a[_ZC]*b[_YC];
